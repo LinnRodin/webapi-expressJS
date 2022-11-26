@@ -1,4 +1,8 @@
+const users = []
+   
+module.exports = users
+
 
 const products = []
 
-module.exposts = products
+module.exports = products
