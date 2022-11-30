@@ -13,6 +13,6 @@ const usersController = require('./controllers/usersController')
 app.use('/api/users', usersController)
 
 const productController = require('./controllers/productController')
-app.use('/api/product', productController)
+app.use('/api/products', productController)
 
 app.listen(port, () => console.log(`WebApi is running on http://localhost:${port}`))

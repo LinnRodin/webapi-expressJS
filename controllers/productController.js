@@ -3,32 +3,32 @@ const controller = express.Router()
 let products = require('../data/simulated_database')
 
 
-//POST - CREATE - SKAPA EN ANVÄNDARE - SKICKA INFORMATION DOLT 
-//GET - READ - HÄR HÄMTAR VI ALLA ANVÄNDARE - SYNLIG DATA I URL:en 
+//POST - CREATE - SKAPA - SKICKA INFORMATION DOLT 
+//GET - READ - HÄR HÄMTAR VI ALLT - SYNLIG DATA I URL:en 
 
 
 controller.param ("id", (req, res, next, id) => {
-    req.products = products.find(products => products.id == id)
+    req.product = products.find(product => product.id == id)
     next()
 })
 
-// http://localhost:5000/api/users/
+// http://localhost:5000/api/products/
 
 controller.route('/')
 .post((httpRequest, httpResponse) => {
-    let products = {
-        id: (products[products.length -1])?.id > 0? (products[products.length -1])?.id + 1 : 1,
-            articleNumber: httpRequest.body.articleNumber,
-            category: httpRequest.body.category,
-            imageURL: httpRequest.body.imageURL, 
-            title: httpRequest.body.title, 
-            description: httpRequest.body.description, 
-            price: httpRequest.body.price 
-           
+    let product = {
+        articleNumber: (products[products.length -1])?.articleNumber > 0? (products[products.length -1])?.articleNumber + 1 : 1,
+        // articleNumber: httpRequest.body.articleNumber,
+        category: httpRequest.body.category,
+        imageURL: httpRequest.body.imageURL, 
+        title: httpRequest.body.title, 
+        description: httpRequest.body.description, 
+        price: httpRequest.body.price 
+        
     }
 
-    products.push(products)
-    httpResponse.status(201).json(products)
+    products.push(product)
+    httpResponse.status(201).json(product)
 })
 
 
@@ -39,29 +39,29 @@ controller.route('/')
 })
 
 
-// http://localhost:5000/api/users/1
+// http://localhost:5000/api/products/1
 
 controller.route("/:id")
 .get((httpRequest, httpResponse) => {
-    if (httpRequest.products != undefined)
-        httpResponse.status(200).json(httpRequest.products)
+    if (httpRequest.product != undefined)
+        httpResponse.status(200).json(httpRequest.product)
     else
         httpResponse.status(404).json  
 })
 
 .put((httpRequest, httpResponse) => {
-    if (httpRequest.products != undefined) {
-        products.forEach(products => {
-          if (products.id == httpRequest.products.id) {
-             products.category = httpRequest.body.category? httpRequest.body.category : products.category
-             products.imageURL = httpRequest.body.imageURL ? httpRequest.body.title : products.imageURL
-             products.title = httpRequest.body.title ? httpRequest.body.title : products.title
-             products.description = httpRequest.body.description ? httpRequest.body.description : products.description
-             products.price = httpRequest.body.price ? httpRequest.body.price : products.price
+    if (httpRequest.product != undefined) {
+        products.forEach(product => {
+          if (product.articleNumber == httpRequest.product.id) {
+             product.category = httpRequest.body.category? httpRequest.body.category : product.category
+             product.imageURL = httpRequest.body.imageURL ? httpRequest.body.title : product.imageURL
+             product.title = httpRequest.body.title ? httpRequest.body.title : product.title
+             product.description = httpRequest.body.description ? httpRequest.body.description : product.description
+             product.price = httpRequest.body.price ? httpRequest.body.price : product.price
 
             } 
         })     
-        httpResponse.status(200).json(httpRequest.products)
+        httpResponse.status(200).json(httpRequest.product)
     }
     else
         httpResponse.status(404).json() 
@@ -69,8 +69,8 @@ controller.route("/:id")
 })
 
 .delete((httpRequest, httpResponse) => {
-    if (httpRequest.products != undefined) {
-        products = products.filter(products => products.id !== httpRequest.products.id)
+    if (httpRequest.product != undefined) {
+        products = products.filter(product => product.articleNumber !== httpRequest.product.id)
         httpResponse.status(204).json()
     }
     else
