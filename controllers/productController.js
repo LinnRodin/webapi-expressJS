@@ -1,81 +1,60 @@
 const express = require('express')
 const controller = express.Router()
-let products = require('../data/simulated_database')
+
+const productSchema = require('../schemas/productSchema')
 
 
-//POST - CREATE - SKAPA - SKICKA INFORMATION DOLT 
-//GET - READ - HÄR HÄMTAR VI ALLT - SYNLIG DATA I URL:en 
+// unsecured routes 
 
+//hämtar upp alla produkter
 
-controller.param ("id", (req, res, next, id) => {
-    req.product = products.find(product => product.id == id)
-    next()
-})
-
-// http://localhost:5000/api/products/
-
-controller.route('/')
-.post((httpRequest, httpResponse) => {
-    let product = {
-        articleNumber: (products[products.length -1])?.articleNumber > 0? (products[products.length -1])?.articleNumber + 1 : 1,
-        // articleNumber: httpRequest.body.articleNumber,
-        category: httpRequest.body.category,
-        imageURL: httpRequest.body.imageURL, 
-        title: httpRequest.body.title, 
-        description: httpRequest.body.description, 
-        price: httpRequest.body.price 
-        
+controller.route('/').get(async (req,res) => {
+    try{
+        res.status(200).json(await productSchema.find())
+    } catch {
+        res.status(400).json()
     }
 
-    products.push(product)
-    httpResponse.status(201).json(product)
 })
 
+//hämtar upp alla tag:ar
 
-.get((httpRequest, httpResponse) => {
-
-    httpResponse.status(200).json(products)
-
-})
-
-
-// http://localhost:5000/api/products/1
-
-controller.route("/:id")
-.get((httpRequest, httpResponse) => {
-    if (httpRequest.product != undefined)
-        httpResponse.status(200).json(httpRequest.product)
+controller.route('/:tag').get(async (req, res) => {
+    const products = await productSchema.find({ tag: req.params.tag })
+    if(products)
+       res.status(200).json(products)
     else
-        httpResponse.status(404).json  
+       res.status(400).json()
 })
 
-.put((httpRequest, httpResponse) => {
-    if (httpRequest.product != undefined) {
-        products.forEach(product => {
-          if (product.articleNumber == httpRequest.product.id) {
-             product.category = httpRequest.body.category? httpRequest.body.category : product.category
-             product.imageURL = httpRequest.body.imageURL ? httpRequest.body.title : product.imageURL
-             product.title = httpRequest.body.title ? httpRequest.body.title : product.title
-             product.description = httpRequest.body.description ? httpRequest.body.description : product.description
-             product.price = httpRequest.body.price ? httpRequest.body.price : product.price
 
-            } 
-        })     
-        httpResponse.status(200).json(httpRequest.product)
-    }
+//sorterar på hur många produkter vi vill hämta upp
+
+controller.route('/:tag/:take').get(async(req,res) => {
+    const products = await productSchema.find({ tag: req.params.tag }).limit(req.params.take)
+    if(products)
+        res.status(200).json(products)
     else
-        httpResponse.status(404).json() 
-
+        res.status(400).json()
 })
 
-.delete((httpRequest, httpResponse) => {
-    if (httpRequest.product != undefined) {
-        products = products.filter(product => product.articleNumber !== httpRequest.product.id)
-        httpResponse.status(204).json()
-    }
+
+
+
+//hämtar upp baserat på ett articleNumber eller id
+
+
+controller.route('/product/details/:articleNumber').get(async(req,res) => {
+    const product = await productSchema.findById(req.params.articleNumber)
+    if(product)
+       res.status(200).json(product)
     else
-        httpResponse.status(404).json  
+       res.status(404).json()
+
 })
+
+
+// secured routes
 
 
 
