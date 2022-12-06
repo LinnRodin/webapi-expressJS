@@ -8,7 +8,7 @@ const productSchema = mongoose.Schema({
     category: {type: String},
     tag: {type: String},
     rating: {type: Number},
-    imageName: {type: String},
+    imageURL: {type: String},
 
 
 })
