@@ -12,7 +12,7 @@ controller.param ("id", (req, res, next, id) => {
     next()
 })
 
-// http://localhost:5000/api/products/
+// http://localhost:5550/api/products/
 
 controller.route('/')
 .post((httpRequest, httpResponse) => {
@@ -38,7 +38,7 @@ controller.route('/')
 })
 
 
-// http://localhost:5000/api/products/1
+// http://localhost:5550/api/products/1
 
 controller.route("/:id")
 .get((httpRequest, httpResponse) => {

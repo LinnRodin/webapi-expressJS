@@ -102,6 +102,57 @@ controller.route('/product/details/:articleNumber').get(async(req,res) => {
 // secured routes
 
 
+//Create product
+
+controller.route('/').post(async(req, res) => {
+    const { name, description, price, category, tag, imageURL, rating } = req.body
+    
+    if (!name || !price)
+        res.status(400).json({text: 'name and price is required.'})
+    
+    const item_exists = await productSchema.findOne({name})
+    if (item_exists)
+        res.status(409).json({text: 'a product with the same name already exists.'})
+    else {
+        const product = await productSchema.create({
+            name, 
+            description,
+            price,
+            category,
+            tag,
+            imageURL,
+            rating
+        })
+        if (product)
+            res.status(201).json({text: `product with article number ${product._id} was created successfully.`})  
+        else
+            res.status(400).json({text: 'something went wrong when we tried to create the product.'})    
+    }    
+})
+
+
+//Delete product
+
+controller.route('/:articleNumber').delete(async(req, res) => {
+    if (!req.params.articleNumber)
+        res.status(400).json('no article number was specified.')
+
+    else {
+        const item = await productSchema.findById(req.params.articleNumber)
+        if (item) {
+            await productSchema.remove(item)
+            res.status(200).json({text: `product with article number ${req.params.articleNumber} was deleted successfully.`})
+        } else {
+            res.status(404).json({text: `product with article number ${req.params.articleNumber} was not found.`})
+        }
+   }
+
+})
+
+
+//update product
+
 
 
 module.exports = controller
+
