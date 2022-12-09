@@ -110,7 +110,7 @@ controller.route('/').post(async(req, res) => {
     if (!name || !price)
         res.status(400).json({text: 'name and price is required.'})
     
-    const item_exists = await productSchema.findOne({name})
+    const item_exists = await productSchema.findOne({name, price})
     if (item_exists)
         res.status(409).json({text: 'a product with the same name already exists.'})
     else {
@@ -138,9 +138,9 @@ controller.route('/:articleNumber').delete(async(req, res) => {
         res.status(400).json('no article number was specified.')
 
     else {
-        const item = await productSchema.findById(req.params.articleNumber)
-        if (item) {
-            await productSchema.remove(item)
+        const product = await productSchema.findById(req.params.articleNumber)
+        if (product) {
+            await productSchema.remove(product)
             res.status(200).json({text: `product with article number ${req.params.articleNumber} was deleted successfully.`})
         } else {
             res.status(404).json({text: `product with article number ${req.params.articleNumber} was not found.`})
