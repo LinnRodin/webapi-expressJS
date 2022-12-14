@@ -55,6 +55,7 @@ controller.route('/:tag').get(async (req, res) => {
 //sorterar på hur många produkter vi vill hämta upp
 
 controller.route('/:tag/:take').get(async(req,res) => {
+    
     const products = []
     const list = await productSchema.find({ tag: req.params.tag }).limit(req.params.take)
     if(list) {
@@ -81,19 +82,19 @@ controller.route('/:tag/:take').get(async(req,res) => {
 //hämtar upp baserat på ett articleNumber eller id
 
 
-controller.route('/details/:articleNumber').get(async(req,res) => {
-    const product = await productSchema.findById(ObjectId(req.params.articleNumber))
+controller.route('/products/details/:articleNumber').get(async(req,res) => {
+    const product = await productSchema.findById(req.params.articleNumber)
     if(product) {                
-        res.status(200).json({
-            articleNumber:product._id,
-            name:product.name,
-            description:product.description,
-            price:product.price,
-            category:product.category,
-            tag:product.tag,
-            imageURL:product.imageURL,
-            rating:product.rating
-        })
+         res.status(200).json({
+            articleNumber: product._id,
+            name: product.name,
+            description: product.description,
+            price: product.price,
+            category: product.category,
+            tag: product.tag,
+            imageURL: product.imageURL,
+            rating: product.rating
+         })
     } else
         res.status(404).json()
 })
@@ -167,6 +168,10 @@ controller.route('/:articleNumber').put(async(req, res) => {
     }
     return (updatedProduct)
 })
+
+
+//update product vers. 2
+
 
 module.exports = controller
 
