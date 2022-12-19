@@ -146,7 +146,7 @@ controller.route('/:articleNumber').delete(async(req, res) => {
         } else {
             res.status(404).json({text: `product with article number ${req.params.articleNumber} was not found.`})
         }
-   }
+    }
 
 })
 
