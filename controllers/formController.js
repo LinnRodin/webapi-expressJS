@@ -18,11 +18,13 @@ controller.route('/')
 .post((httpRequest, httpResponse) => {
     let product = {
         articleNumber: (products[products.length -1])?.articleNumber > 0? (products[products.length -1])?.articleNumber + 1 : 1,
+        name: httpRequest.body.name,
         category: httpRequest.body.category,
         imageURL: httpRequest.body.imageURL, 
         title: httpRequest.body.title, 
         description: httpRequest.body.description, 
-        price: httpRequest.body.price 
+        price: httpRequest.body.price
+        
         
     }
 

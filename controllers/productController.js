@@ -173,5 +173,6 @@ controller.route('/:articleNumber').put(async(req, res) => {
 //update product vers. 2
 
 
+
 module.exports = controller
 
