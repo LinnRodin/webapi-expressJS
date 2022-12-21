@@ -15,10 +15,10 @@ app.use(bodyParser.json()) //specifically for POST Requests
 //routes
 
 initMongoDB()
-// const usersController = require('./controllers/usersController')
+// const usersController = require('./controllers/usersController') Not in use
 // app.use('/api/users', usersController)
 
-//  const formController = require('./controllers/formController')
+//  const formController = require('./controllers/formController') Not in use
 //  app.use('/api/form', formController)
 
 const productsController = require('./controllers/productController')
